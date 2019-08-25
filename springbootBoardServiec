@@ -1,0 +1,101 @@
+package com.edu.homepage.board.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.edu.homepage.board.dto.BoardDto;
+
+@Mapper
+public interface BoardMapper {
+
+	List<BoardDto> selectBoardList() throws Exception;
+	
+	void insertBoard(BoardDto dto) throws Exception;
+	
+	BoardDto selectBoardDetail(int boardIdx) throws Exception;
+
+	void updateHitCount(int boardIdx) throws Exception;
+
+	void updateBoard(BoardDto dto) throws Exception;
+	
+	void deleteBoard(int boardIdx) throws Exception;
+}
+-------------------------------------------------------------------------------------------------
+
+package com.edu.homepage.board.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.edu.homepage.board.dto.BoardDto;
+import com.edu.homepage.board.mapper.BoardMapper;
+
+@Service
+public class BoardServiceImpl implements BoardService {
+	
+	@Autowired
+	BoardMapper mapper;
+	
+	@Override
+	public List<BoardDto> getBoardTotal() throws Exception {
+		return mapper.selectBoardList();
+	}
+	
+	@Override
+	public void registerBoard(BoardDto dto) throws Exception {
+		mapper.insertBoard(dto);
+	}
+	
+	@Override
+	public BoardDto showBoardDetail(int boardIdx) throws Exception {
+		mapper.updateHitCount(boardIdx);
+		
+		return mapper.selectBoardDetail(boardIdx);
+	}
+	
+	@Override
+	public void updateBoardInfo(BoardDto dto) throws Exception {
+		mapper.updateBoard(dto);
+	}
+
+	@Override
+	public void deleteBoardInfo(int boardIdx) throws Exception {
+		mapper.deleteBoard(boardIdx);
+	}
+	
+}
+------------------------------------------------------------------------------------------------
+
+
+
+package com.edu.homepage.board.service;
+
+import java.util.List;
+
+import com.edu.homepage.board.dto.BoardDto;
+
+public interface BoardService {
+	
+	/**
+	 * 해당전체 게시판리스트 취득메소드
+	 * @return
+	 * @throws Exception
+	 */
+	List<BoardDto> getBoardTotal() throws Exception;
+	
+	/**
+	 * 게시판 내용 등록
+	 * @param dto
+	 * @throws Exception
+	 */
+	void registerBoard(BoardDto dto) throws Exception;
+	
+	BoardDto showBoardDetail(int boardIdx) throws Exception;
+
+	void updateBoardInfo(BoardDto dto) throws Exception;
+	
+	void deleteBoardInfo(int  boardIdx) throws Exception;
+}
